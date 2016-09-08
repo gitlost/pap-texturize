@@ -577,7 +577,8 @@ function pap_wptexturize_replace_init( &$str, $search ) {
 	if ( preg_match_all( $search, $str, $matches, PREG_OFFSET_CAPTURE ) ) {
 		$pap_wptexturize_strips = $pap_wptexturize_adjusts = $strs = array();
 		$diff = 0;
-		foreach ( $matches[0] as list( $match, $offset ) ) {
+		foreach ( $matches[0] as $entry ) {
+			list( $match, $offset ) = $entry;
 			$len = strlen( $match );
 			// Save details of stripped string.
 			$pap_wptexturize_strips[] = array( $match, $offset - $diff /*, $len /* Store len if not using byte array in pap_wptexturize_replace_final(). */ );
@@ -644,7 +645,8 @@ function pap_wptexturize_replace_regex( &$str, $search, $repl ) {
 				$diff = 0;
 				// Allow for a single captured replacement.
 				if ( false !== ( $pos1 = strpos( $repl_str, '$1' ) ) ) {
-					foreach ( $matches[0] as $i => list( $match, $offset ) ) {
+					foreach ( $matches[0] as $i => $entry ) {
+						list( $match, $offset ) = $entry;
 						// For a 'pre$1post' replacement, need to track pre-submatch replace and then post-submatch replace.
 						$pre_repl_len = $pos1;
 						$pre_len = $matches[1][$i][1] - $offset; // Submatch offset less full match offset.
@@ -664,7 +666,8 @@ function pap_wptexturize_replace_regex( &$str, $search, $repl ) {
 						}
 					}
 				} else {
-					foreach ( $matches[0] as list( $match, $offset ) ) {
+					foreach ( $matches[0] as $entry ) {
+						list( $match, $offset ) = $entry;
 						$len = strlen( $match );
 						if ( $repl_len !== $len ) {
 							// Store adjustment details.
@@ -690,7 +693,8 @@ function pap_wptexturize_replace_final( &$str ) {
 	// Finalize - restore stripped strings.
 	if ( $pap_wptexturize_strip_cnt ) {
 		// Calculate offset adjustments.
-		foreach ( $pap_wptexturize_adjusts as list( $offset, $repl_len, $len ) ) {
+		foreach ( $pap_wptexturize_adjusts as $entry ) {
+			list( $offset, $repl_len, $len ) = $entry;
 			for ( $i = $pap_wptexturize_strip_cnt - 1; $i >= 0 && $offset < ( $strip_offset = &$pap_wptexturize_strips[$i][1]); $i-- ) {
 				if ( $len > 1 && $offset + 1 < $strip_offset ) {
 					$strip_offset += $repl_len - $len;
@@ -703,14 +707,16 @@ function pap_wptexturize_replace_final( &$str ) {
 		// Restore stripped strings.
 		$str_arr = str_split( $str ); // Using byte array (seems to be a bit quicker than substr_replace()).
 		array_unshift( $str_arr, '' );
-		foreach ( $pap_wptexturize_strips as list( $strip, $offset ) ) {
+		foreach ( $pap_wptexturize_strips as $entry ) {
+			list( $strip, $offset ) = $entry;
 			$str_arr[$offset] .= $strip;
 		}
 		$str = implode( '', $str_arr );
 		unset( $str_arr );
 		/* If not using byte array. (Note need to store $len in pap_wptexturize_replace_init()).
 		$diff = 0;
-		foreach ( $pap_wptexturize_strips as list( $strip, $offset, $len ) ) {
+		foreach ( $pap_wptexturize_strips as $entry ) {
+			list( $strip, $offset, $len ) = $entry;
 			$str = substr_replace( $str, $strip, $offset + $diff, 0 );
 			$diff += $len;
 		}
