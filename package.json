@@ -1,0 +1,18 @@
+{
+  "name": "pap-texturize",
+  "version": "1.0.0",
+  "description": "Patch-as-plugin that texturizes text containing inline HTML tags.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gitlost/pap-texturize"
+  },
+  "author": "gitlost",
+  "license": "GPL-2.0",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-compress": "^1.3.0",
+    "grunt-phpunit": "^0.3.6",
+    "grunt-wp-readme-to-markdown": "~2.0.0",
+    "load-grunt-tasks": "^3.5.0"
+  }
+}
