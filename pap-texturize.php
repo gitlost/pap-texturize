@@ -748,7 +748,7 @@ function _pap_get_wptexturize_split_regex( $shortcode_regex = '' ) {
 			. ')*+'         // Loop possessively.
 			. '(?:-->)?';   // End of comment. If not found, match all input.
 
-		$nonsplit_regex = '\/?(?:a\b|abbr|b\b|big|br|dfn|em|i\b|samp|small|span|strong|sub|sup|var)[^>]*>';
+		$nonsplit_regex = '\/?(?:a|abbr|b|big|br|cite|dfn|em|i|mark|q|s|samp|small|span|strong|sub|sup|u|var)(?![0-9A-Za-z])[^>]*>';
 
 		$html_regex =			 // Needs replaced with wp_html_split() per Shortcode API Roadmap.
 			  '<'                // Find start of element.
